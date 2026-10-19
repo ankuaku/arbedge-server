@@ -88,6 +88,8 @@ class Engine:
                             best[i] = (book, p)
                 if any(b is None for b in best):
                     continue
+                if len({b[0] for b in best}) < 2:
+                    continue  # a single bookmaker can't be arbed against itself
                 inv = sum(1 / b[1] for b in best)
                 if inv >= 1:
                     continue
