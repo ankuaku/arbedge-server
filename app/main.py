@@ -50,6 +50,8 @@ def start_providers():
         d = DemoProvider(get_bookmakers=engine.enabled_keys, on_update=engine.make_updater("demo"),
                          tick_seconds=float(os.getenv("DEMO_TICK_SECONDS", "2.5")))
         tasks.append(d.run())
+    from .telegram import bot
+    tasks.append(bot.run())
     print(f"[odds] provider mode: {mode}")
     return [asyncio.create_task(t) for t in tasks]
 

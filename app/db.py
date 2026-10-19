@@ -153,9 +153,9 @@ BOOKMAKERS = [
 
 PLANS = [
     dict(slug="trial", name="Trial", price=10, duration_days=3, max_profit=3, delay_seconds=30, live_access=0, is_trial=1, highlight=0, sort=1,
-         features=["3 days on the full scanner", "Pre-match arbs up to 3% profit", "Arbs shown 30 seconds after they open", "Odds comparison across every bookmaker", "Stake calculator and bet log"]),
+         features=["3 days on the full scanner", "Pre-match arbs up to 3% profit", "Arbs shown 30 seconds after they open", "Odds comparison across every bookmaker", "Stake calculator and bet log", "Telegram alerts"]),
     dict(slug="pro", name="Pro", price=100, duration_days=30, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=1, sort=2,
-         features=["Arbs the second they open", "Pre-match and in-play arbs", "Arbs of any profit size", "All 30+ bookmakers", "Sound alert for new arbs", "Bet log with profit tracking"]),
+         features=["Arbs the second they open", "Pre-match and in-play arbs", "Arbs of any profit size", "All 30+ bookmakers", "Sound and Telegram alerts for new arbs", "Bet log with profit tracking"]),
     dict(slug="elite", name="Elite", price=250, duration_days=90, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=3,
          features=["Everything in Pro, for 90 days", "Works out $50 cheaper than 3 months of Pro", "Your own bookmaker set saved", "Priority support"]),
     dict(slug="desk", name="Personal Desk", price=1000, duration_days=180, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=4,
@@ -174,9 +174,20 @@ DEFAULT_SETTINGS = {
 }
 
 
+MIGRATIONS = [
+    "ALTER TABLE users ADD COLUMN tg_chat_id TEXT",
+    "ALTER TABLE users ADD COLUMN tg_username TEXT",
+    "ALTER TABLE users ADD COLUMN tg_link_code TEXT",
+]
+
+
 def init_db():
     with _lock:
         _conn.executescript(SCHEMA)
+        cols = {r[1] for r in _conn.execute("PRAGMA table_info(users)").fetchall()}
+        for m in MIGRATIONS:
+            if m.split("ADD COLUMN ")[1].split()[0] not in cols:
+                _conn.execute(m)
         _conn.commit()
     if not q1("SELECT id FROM bookmakers LIMIT 1"):
         for i, b in enumerate(BOOKMAKERS):

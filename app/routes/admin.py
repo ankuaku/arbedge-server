@@ -267,3 +267,26 @@ def save_settings(body: dict):
         if k in DEFAULT_SETTINGS:
             ex("INSERT INTO settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", (k, str(v)))
     return get_settings()
+
+
+# ---------- telegram ----------
+@router.get("/telegram")
+def telegram_status():
+    from ..telegram import bot
+    return bot.status()
+
+
+class BroadcastIn(BaseModel):
+    text: str
+    audience: str = "all"  # all | active
+
+
+@router.post("/telegram/broadcast")
+async def telegram_broadcast(body: BroadcastIn):
+    from ..telegram import bot
+    if not bot.enabled:
+        raise HTTPException(503, "Bot is not running. Set TELEGRAM_BOT_TOKEN on the server.")
+    text = body.text.strip()
+    if not text or len(text) > 3500:
+        raise HTTPException(400, "Message must be 1 to 3500 characters")
+    return {"sent": await bot.broadcast(text, body.audience)}

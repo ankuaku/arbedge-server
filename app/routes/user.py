@@ -11,7 +11,8 @@ from ..security import hash_password, verify_password
 router = APIRouter(prefix="/api")
 
 ALLOWED_SETTINGS = {"bookmakers", "sports", "minProfit", "maxProfit", "stake", "rounding", "currency",
-                    "sound", "showLive", "showPrematch", "markets", "hideStartedMinutes"}
+                    "sound", "showLive", "showPrematch", "markets", "hideStartedMinutes",
+                    "tgMinProfit", "tgLive", "tgPrematch", "tgPaused"}
 
 
 @router.get("/me")
@@ -135,4 +136,31 @@ def update_bet(bid: int, body: BetUpdate, u=Depends(current_user)):
 @router.delete("/bets/{bid}")
 def delete_bet(bid: int, u=Depends(current_user)):
     ex("DELETE FROM bets WHERE id=? AND user_id=?", (bid, u["id"]))
+    return {"ok": True}
+
+
+# ---------- telegram ----------
+@router.post("/me/telegram/link")
+def telegram_link(u=Depends(current_user)):
+    from ..telegram import bot
+    if not bot.enabled or not bot.username:
+        raise HTTPException(503, "Telegram alerts aren’t switched on yet. Please contact support.")
+    return {"url": bot.link_url(u["id"]), "bot": bot.username}
+
+
+@router.delete("/me/telegram")
+def telegram_unlink(u=Depends(current_user)):
+    ex("UPDATE users SET tg_chat_id=NULL, tg_username=NULL WHERE id=?", (u["id"],))
+    from ..telegram import bot
+    bot.users_at = 0
+    return public_user(q1("SELECT * FROM users WHERE id=?", (u["id"],)))
+
+
+@router.post("/me/telegram/test")
+async def telegram_test(u=Depends(current_user)):
+    from ..telegram import bot
+    if not u.get("tg_chat_id"):
+        raise HTTPException(400, "Connect Telegram first")
+    if not await bot.test(u):
+        raise HTTPException(502, "Telegram didn’t accept the message. Make sure you haven’t blocked the bot.")
     return {"ok": True}

@@ -45,11 +45,16 @@ def login(body: LoginIn):
     return {"token": sign_token(u["id"]), "user": public_user(u)}
 
 
+def _tg_name():
+    from ..telegram import bot
+    return bot.username
+
+
 @router.get("/api/public/config")
 def config():
     s = get_settings()
     return {
-        "siteName": s.get("site_name"), "theme": s.get("theme") or "bookie", "support": s.get("support_telegram"), "announcement": s.get("announcement"),
+        "siteName": s.get("site_name"), "telegramBot": _tg_name(), "theme": s.get("theme") or "bookie", "support": s.get("support_telegram"), "announcement": s.get("announcement"),
         "wallets": {"TRC20": s.get("wallet_trc20"), "BEP20": s.get("wallet_bep20")},
         "plans": [plan_row(p) for p in q("SELECT * FROM plans WHERE active=1 ORDER BY sort, price")],
         "bookmakers": [{"key": b["key"], "name": b["name"], "color": b["color"], "region": b["region"],

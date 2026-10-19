@@ -29,6 +29,7 @@ class Engine:
         self.seen24: dict[str, tuple[int, float]] = {}  # arb id -> (first seen, profit)
         self.bookmakers: dict[str, dict] = {}
         self.clients: dict[WebSocket, dict] = {}
+        self.notifier = None
         self.last_update = 0
         self.stats = {"events": 0, "arbs": 0, "bookmakers": 0, "best": 0, "updated": 0}
         self.reload_bookmakers()
@@ -52,6 +53,11 @@ class Engine:
             self.sources[source] = events
             self.recompute()
             await self.broadcast()
+            if self.notifier:
+                try:
+                    await self.notifier.on_arbs(self.arbs)
+                except Exception as e:
+                    print("[notifier] error", e)
         return _upd
 
     def recompute(self):

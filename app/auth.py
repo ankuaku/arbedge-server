@@ -46,6 +46,7 @@ def public_user(u: dict) -> dict:
         "id": u["id"], "email": u["email"], "name": u["name"], "role": u["role"], "status": u["status"],
         "settings": settings, "trialUsed": bool(u["trial_used"]), "createdAt": u["created_at"],
         "access": access_for(u),
+        "telegram": {"linked": bool(u.get("tg_chat_id")), "username": u.get("tg_username") or None},
     }
 
 
