@@ -26,6 +26,7 @@ class Engine:
         self.events: dict[str, dict] = {}
         self.arbs: list[dict] = []
         self.first_seen: dict[str, int] = {}
+        self.seen24: dict[str, tuple[int, float]] = {}  # arb id -> (first seen, profit)
         self.bookmakers: dict[str, dict] = {}
         self.clients: dict[WebSocket, dict] = {}
         self.last_update = 0
@@ -107,6 +108,12 @@ class Engine:
         for k in list(self.first_seen):
             if k not in seen_now:
                 del self.first_seen[k]
+        for a in arbs:
+            if a["id"] not in self.seen24:
+                self.seen24[a["id"]] = (now, a["profit"])
+        cutoff = now - 86400000
+        if len(self.seen24) > 5000 or now % 60 == 0:
+            self.seen24 = {k: v for k, v in self.seen24.items() if v[0] > cutoff}
         arbs.sort(key=lambda a: -a["profit"])
         self.arbs = arbs
         self.last_update = now
@@ -114,6 +121,8 @@ class Engine:
             "events": len(self.events), "arbs": len(arbs),
             "bookmakers": len(enabled), "best": arbs[0]["profit"] if arbs else 0, "updated": now,
             "live": sum(1 for a in arbs if a["live"]),
+            "arbs24h": sum(1 for v in self.seen24.values() if v[0] > cutoff),
+            "best24h": max((v[1] for v in self.seen24.values() if v[0] > cutoff), default=0),
         }
 
     # ---------- gating ----------
