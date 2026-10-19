@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: arbedge-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ODDS_PROVIDER
+        value: demo
+      - key: CORS_ORIGINS
+        value: https://arbedge-scanner.netlify.app
