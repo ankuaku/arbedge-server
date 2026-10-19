@@ -336,7 +336,7 @@ class TelegramBot:
         text = (f"🔥 <b>{a['profit']:.2f}% arb found</b>\n{_esc(a['sport'])}, {_esc(a['league'])}, {_esc(a['marketName'])}\n"
                 f"{_starts(a['commence'])}\n\nBack every outcome, profit {a['profit']:.2f}% whoever wins. "
                 f"The bookmakers, odds and stakes are on {_esc(site)}.")
-        btn = [[{"text": "Start the $10 trial", "url": f"{self.site}/register"}]] if self.site.startswith("https://") else None
+        btn = [[{"text": "Start trial", "url": f"{self.site}/register"}]] if self.site.startswith("https://") else None
         await self.send(self.channel, text, btn)
 
     # ---------- used by API ----------

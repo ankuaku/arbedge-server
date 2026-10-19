@@ -157,7 +157,7 @@ PLANS = [
     dict(slug="pro", name="Pro", price=100, duration_days=30, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=1, sort=2,
          features=["Arbs the second they open", "Pre-match and in-play arbs", "Arbs of any profit size", "All 30+ bookmakers", "Sound and Telegram alerts for new arbs", "Bet log with profit tracking"]),
     dict(slug="elite", name="Elite", price=250, duration_days=90, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=3,
-         features=["Everything in Pro, for 90 days", "Works out $50 cheaper than 3 months of Pro", "Your own bookmaker set saved", "Priority support"]),
+         features=["Everything in Pro, for 90 days", "Cheaper than 3 months of Pro", "Your own bookmaker set saved", "Priority support"]),
     dict(slug="desk", name="Personal Desk", price=1000, duration_days=180, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=4,
          features=["Everything in Elite, for 6 months", "1-on-1 onboarding call to set you up", "Your own account manager on Telegram",
                    "Help choosing and funding the right bookmakers", "Bankroll and stake plan built around your budget",
@@ -170,7 +170,7 @@ DEFAULT_SETTINGS = {
     "wallet_trc20": "",
     "wallet_bep20": "",
     "announcement": "",
-    "theme": "bookie",
+    "theme": "slate",
 }
 
 
