@@ -261,6 +261,8 @@ def settings():
 
 @router.put("/settings")
 def save_settings(body: dict):
+    if "theme" in body and body["theme"] not in ("royal", "emerald", "crimson", "midnight", "paper"):
+        raise HTTPException(400, "Unknown theme")
     for k, v in body.items():
         if k in DEFAULT_SETTINGS:
             ex("INSERT INTO settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", (k, str(v)))

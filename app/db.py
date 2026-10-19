@@ -170,6 +170,7 @@ DEFAULT_SETTINGS = {
     "wallet_trc20": "",
     "wallet_bep20": "",
     "announcement": "",
+    "theme": "royal",
 }
 
 
