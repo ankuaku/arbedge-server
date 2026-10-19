@@ -153,11 +153,11 @@ BOOKMAKERS = [
 
 PLANS = [
     dict(slug="trial", name="Trial", price=10, duration_days=3, max_profit=3, delay_seconds=30, live_access=0, is_trial=1, highlight=0, sort=1,
-         features=["3 days scanner access", "Pre-match arbs up to 3% profit", "30s delayed feed", "Odds comparison — all bookmakers", "Stake calculator & bet tracker"]),
+         features=["3 days on the full scanner", "Pre-match arbs up to 3% profit", "Arbs shown 30 seconds after they open", "Odds comparison across every bookmaker", "Stake calculator and bet log"]),
     dict(slug="pro", name="Pro", price=100, duration_days=30, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=1, sort=2,
-         features=["Realtime arbs — zero delay", "Pre-match + live arbs", "Unlimited profit %", "30+ bookmakers", "Sound alerts", "Bet tracker with P/L"]),
+         features=["Arbs the second they open", "Pre-match and in-play arbs", "Arbs of any profit size", "All 30+ bookmakers", "Sound alert for new arbs", "Bet log with profit tracking"]),
     dict(slug="elite", name="Elite", price=250, duration_days=90, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=3,
-         features=["Everything in Pro", "90 days access (save $50)", "Priority feed", "Custom bookmaker set", "Priority support"]),
+         features=["Everything in Pro, for 90 days", "Works out $50 cheaper than 3 months of Pro", "Your own bookmaker set saved", "Priority support"]),
     dict(slug="desk", name="Personal Desk", price=1000, duration_days=180, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=4,
          features=["Everything in Elite, for 6 months", "1-on-1 onboarding call to set you up", "Your own account manager on Telegram",
                    "Help choosing and funding the right bookmakers", "Bankroll and stake plan built around your budget",
