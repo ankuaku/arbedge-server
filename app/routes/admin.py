@@ -261,7 +261,7 @@ def settings():
 
 @router.put("/settings")
 def save_settings(body: dict):
-    if "theme" in body and body["theme"] not in ("royal", "emerald", "crimson", "midnight", "paper"):
+    if "theme" in body and body["theme"] not in ("bookie", "royal", "emerald", "crimson", "midnight", "paper"):
         raise HTTPException(400, "Unknown theme")
     for k, v in body.items():
         if k in DEFAULT_SETTINGS:
