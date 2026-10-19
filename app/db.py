@@ -158,6 +158,10 @@ PLANS = [
          features=["Realtime arbs — zero delay", "Pre-match + live arbs", "Unlimited profit %", "30+ bookmakers", "Sound alerts", "Bet tracker with P/L"]),
     dict(slug="elite", name="Elite", price=250, duration_days=90, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=3,
          features=["Everything in Pro", "90 days access (save $50)", "Priority feed", "Custom bookmaker set", "Priority support"]),
+    dict(slug="desk", name="Personal Desk", price=1000, duration_days=180, max_profit=100, delay_seconds=0, live_access=1, is_trial=0, highlight=0, sort=4,
+         features=["Everything in Elite, for 6 months", "1-on-1 onboarding call to set you up", "Your own account manager on Telegram",
+                   "Help choosing and funding the right bookmakers", "Bankroll and stake plan built around your budget",
+                   "Weekly check-in on your results", "Guidance on keeping bookmaker accounts healthy", "Replies within 1 hour, 7 days a week"]),
 ]
 
 DEFAULT_SETTINGS = {
@@ -176,8 +180,9 @@ def init_db():
     if not q1("SELECT id FROM bookmakers LIMIT 1"):
         for i, b in enumerate(BOOKMAKERS):
             ex("INSERT INTO bookmakers (key,name,color,region,api_key,sort) VALUES (?,?,?,?,?,?)", (*b, i))
-    if not q1("SELECT id FROM plans LIMIT 1"):
-        for p in PLANS:
+    existing = {r["slug"] for r in q("SELECT slug FROM plans")}
+    for p in PLANS:
+        if p["slug"] not in existing:
             ex("""INSERT INTO plans (slug,name,price,duration_days,max_profit,delay_seconds,live_access,is_trial,features,highlight,sort)
                   VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
                (p["slug"], p["name"], p["price"], p["duration_days"], p["max_profit"], p["delay_seconds"],
